@@ -65,4 +65,30 @@ router.post(
     }
 );
 
+router.post(
+    "/getnextnode",
+    async (req, res) => {
+        try{
+            let getnextnode = await Node.find({ bookfrom:req.body.bookfrom ,postid:req.body.postid });
+            console.log(getnextnode.length);
+
+            if(getnextnode.length==0){
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: "Next node doesn't exists" }] });
+            }
+
+            res
+            .status(200)
+            .json({
+                getnextnode
+            });
+
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).send("Server Error");
+        }
+    }
+);
+
 module.exports = router;

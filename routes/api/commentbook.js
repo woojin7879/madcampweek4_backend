@@ -37,4 +37,30 @@ router.post(
     }
 );
 
+router.post(
+    "/getcommentbook",
+    async (req, res) => {
+
+        try {
+            let getcommentbook = await Commentbook.find({ bookfrom:req.body.bookfrom });
+
+            if (getcommentbook.length==0) {
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: "No book comment exists" }] });
+            }
+
+            res
+            .status(200)
+            .json({
+                getcommentbook
+            });
+
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).send("Server Error");
+        }
+    }
+);
+
 module.exports = router;

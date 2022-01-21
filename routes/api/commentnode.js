@@ -9,12 +9,12 @@ router.post(
         const {commentnodeid, writer, nodefrom, content, likes} = req.body;
 
         try {
-            let commentnode = await Commentnode.findOne({ commentnodeid });
+            let commentnode = await Commentnode.findOne({ writer, nodefrom });
 
             if (commentnode) {
                 return res
                     .status(400)
-                    .json({ errors: [{ msg: "User already exists" }] });
+                    .json({ errors: [{ msg: "Comment already exists" }] });
             }
 
             commentnode = new Commentnode ({
@@ -29,6 +29,32 @@ router.post(
 
             res.send("Success");
             console.log("success in console");
+
+        } catch (error) {
+            console.error(error.message);
+            res.status(500).send("Server Error");
+        }
+    }
+);
+
+router.post(
+    "/getcommentnode",
+    async (req, res) => {
+
+        try {
+            let getcommentnode = await Commentnode.find({ nodefrom:req.body.nodefrom });
+
+            if (getcommentnode.length==0) {
+                return res
+                    .status(400)
+                    .json({ errors: [{ msg: "No node comment exists" }] });
+            }
+
+            res
+            .status(200)
+            .json({
+                getcommentnode
+            });
 
         } catch (error) {
             console.error(error.message);
